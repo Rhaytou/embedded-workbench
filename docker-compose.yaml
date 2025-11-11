@@ -1,0 +1,61 @@
+services:
+  # Define the PlatformIO development container
+  platformio-dev:
+    build: .  # Build the image using the Dockerfile in the current directory
+    container_name: platformio-dev  # Set a fixed container name for easier reference
+    privileged: true  # Allow access to hardware devices such as serial ports
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0" # Common device path for Arduino, RP2040, etc.
+      - "/dev/ttyUSB0:/dev/ttyUSB0" # Common device path for ESP32, STM32, etc.
+    volumes:
+      - ./workspace:/workspace  # Mount local workspace directory into the container
+    working_dir: /workspace  # Set the default working directory inside the container
+    environment:
+      - PLATFORMIO_CORE_DIR=/root/.platformio  # Define PlatformIO core directory location
+    stdin_open: true  # Keep STDIN open for interactive sessions
+    tty: true  # Allocate a pseudo-TTY for interactive command-line use
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#services:
+#  embedded-dev:
+#    build: .
+#
+#    container_name: embedded-dev
+#
+#    tty: true
+#
+#    stdin_open: true
+#
+#    volumes:
+#      - ./workspace:/workspace
+#
+#    privileged: true
+#
+#    devices:
+#      #- "/dev:/dev"
+#      - "/dev/ttyUSB0:/dev/ttyUSB0" # common Arduino/ESP32
+#      #- "/dev/ttyUSB1:/dev/ttyUSB1" # optional if multiple boards
+#      #- "/dev/ttyACM0:/dev/ttyACM0" # STM32
+#
+#    command: >
+#      bash -c "chmod -R 777 /workspace && exec bash"
+
+
+
+

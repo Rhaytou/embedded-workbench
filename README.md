@@ -60,6 +60,7 @@ The **tutorials** folder contains specific and advanced examples, including circ
 Each folder is organized by board. Simply copy and paste the code into your board’s **main.c** file to get started.
 
 **Note:** Do not copy the entire file—only the content of the tutorial into the corresponding **main.c** file.
+**Note:** The tutorials will be the same for all boards at first. For example, if I have a course named 'debug', each board will have its own 'debug' course.
 
 ---
 

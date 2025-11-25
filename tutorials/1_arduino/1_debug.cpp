@@ -1,16 +1,17 @@
 /* --------------- */
-/* Title: Debugging with Serial.println() */
+/* Title: Debugging Variables and Program Flow */
 /* --------------- */
 /*
     Description:
-        This example demonstrates how to use Serial.println() to debug
-        your Arduino code. Serial debugging is a simple way to understand
-        what your program is doing by printing messages or variable values
-        to the Serial Monitor.
+        This example demonstrates how to debug variable values and track
+        program execution flow using Serial monitoring. Learn to monitor
+        changing values, identify where your program gets stuck, and
+        understand the sequence of operations.
 
     Requirements:
         - No external components or wiring are needed.
-        - Just upload this code and open the Serial Monitor.
+        - Wiring:
+            Just upload this code and open the Serial Monitor.
 
     Steps to run:
         1. copy the code into the main.cpp file in the workspace/arduino/src folder
@@ -21,36 +22,57 @@
 
 #include <Arduino.h>
 
+int counter = 0;
+int sensorValue = 0;
+
 void setup() {
-    // Initialize the serial connection at a baud rate of 9600.
-    // This must match the setting in your Serial Monitor.
     Serial.begin(9600);
 
-    // Wait for the serial connection to start (helpful for some boards).
     while (!Serial) {
         ; // Wait for serial port to connect.
     }
 
-    // Print a message to confirm setup has started.
-    Serial.println("Setup started.");
+    Serial.println("=== Variable Debugging Example ===");
 
-    // Simulate an initialization step.
-    Serial.println("Initializing system...");
-    delay(1000); // Simulate a short delay
+    // Debugging variable initialization
+    Serial.print("Counter initialized to: ");
+    Serial.println(counter);
 
-    // Confirm that setup is complete.
-    Serial.println("Setup complete. Entering loop.");
+    // Track program flow through setup
+    Serial.println("Step 1: Starting configuration...");
+    delay(500);
+
+    Serial.println("Step 2: Configuration complete");
+    Serial.println("Setup complete - entering main loop");
 }
 
 void loop() {
-    // Print a simple debug message.
-    Serial.println("Loop running...");
+    // Debug loop execution with counter
+    Serial.println("--- Loop cycle start ---");
 
-    // You can imagine placing this inside a real program to check progress.
-    delay(1000); // Wait one second before repeating
+    // Monitor counter variable changes
+    Serial.print("Current counter value: ");
+    Serial.println(counter);
+
+    // Simulate reading a sensor value
+    sensorValue = analogRead(A0);
+    Serial.print("Analog read result: ");
+    Serial.println(sensorValue);
+
+    // Debug conditional logic
+    if (counter % 3 == 0) {
+        Serial.println(">>> Counter is divisible by 3");
+    }
+
+    // Track timing
+    Serial.print("System running for: ");
+    Serial.print(millis());
+    Serial.println(" milliseconds");
+
+    counter++;
+    Serial.println("--- Loop cycle end ---");
+    delay(2000);
 }
-
-
 
 
 

@@ -1,9 +1,7 @@
 /* --------------- */
-/* Blink the BUILTIN LED */
+/* Bultin Led  */
 /* --------------- */
 /*
-    * No need for any other component than an arduino, this simple code blink the bultin led.
-*/
 #include <Arduino.h>
 
 void setup() {
@@ -16,6 +14,23 @@ void loop() {
     digitalWrite(13, LOW);
     delay(1000);
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

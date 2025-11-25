@@ -35,13 +35,14 @@ embedded-workbench/
 ### What is the Workspace?
 
 The **workspace** folder is where the boards are implemented.
-If you want to add your own board, place it here and update the **Makefile** configuration.
+If you want to add your own board, place it here and update the Makefile configuration. Create a folder using the board name (it must currently be PlatformIO-compatible), add the required structure, and specify your board when using the tool by setting: BOARD=YOUR_BOARD_NAME.
 Many boards share the same workflow commands since they use the same framework, such as PlatformIO for Arduino and ESP32.
 
 The project uses external dependencies to manage the logic, so implementation will be done step by step, starting with the PlatformIO library.
 
 **Current compatibility:**
 
++ PlatformIO:
 | Architecture     | Boards / Examples                                  |
 | ---------------- | -------------------------------------------------- |
 | **AVR**          | Arduino Uno, Nano, Mega, ATtiny                    |
@@ -129,6 +130,24 @@ make upload BOARD=arduino
 make monitor BOARD=arduino
 ```
 
+**Clean PlatformIO build files for the selected board**
+
+```
+make clean
+```
+
+**Stop and remove all Docker containers and volumes defined in docker-compose**
+
+```
+make down
+```
+
+**Full Docker cleanup**
+
+```
+make docker_clean_all
+```
+
 ---
 
 ## Coming Soon
@@ -140,7 +159,7 @@ make monitor BOARD=arduino
 
 ### Tutorials
 
-* More Arduino and ESP32 tutorials (up to 10 per board)
+* Arduino and ESP32 full courses.
 
 ---
 
@@ -149,22 +168,6 @@ make monitor BOARD=arduino
 This section will be updated soon.
 
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

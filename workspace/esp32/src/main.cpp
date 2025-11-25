@@ -1,10 +1,4 @@
-/* --------------- */
-/* Blink the BUILTIN LED */
-/* --------------- */
 /*
-    * No need for any other component than an esp32, this simple code blink the bultin led.
-*/
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
@@ -23,5 +17,31 @@ void app_main(void)
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

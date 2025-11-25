@@ -17,3 +17,45 @@ services:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#services:
+#  embedded-dev:
+#    build: .
+#
+#    container_name: embedded-dev
+#
+#    tty: true
+#
+#    stdin_open: true
+#
+#    volumes:
+#      - ./workspace:/workspace
+#
+#    privileged: true
+#
+#    devices:
+#      #- "/dev:/dev"
+#      - "/dev/ttyUSB0:/dev/ttyUSB0" # common Arduino/ESP32
+#      #- "/dev/ttyUSB1:/dev/ttyUSB1" # optional if multiple boards
+#      #- "/dev/ttyACM0:/dev/ttyACM0" # STM32
+#
+#    command: >
+#      bash -c "chmod -R 777 /workspace && exec bash"
+
+
+
+

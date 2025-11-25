@@ -1,12 +1,4 @@
-/* Blink example for BluePill (STM32F103C8) — single-file C++
- *
- * Mirrors Arduino logic:
- *  - LED ON for 2000 ms
- *  - LED OFF for 1000 ms
- *
- * On a BluePill the user LED is on PC13 and is active-low (writing RESET turns it ON).
- */
-
+/*
 #include "stm32f1xx_hal.h"
 
 #define LED_GPIO_PORT GPIOC
@@ -50,7 +42,7 @@ static void MX_GPIO_Init(void)
     HAL_GPIO_WritePin(LED_GPIO_PORT, LED_PIN, GPIO_PIN_SET);
 }
 
-/* Minimal HSI-based clock setup; suitable for simple apps on BluePill */
+// Minimal HSI-based clock setup; suitable for simple apps on BluePill
 void SystemClock_Config(void)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {};
@@ -93,6 +85,39 @@ void Error_Handler(void)
         HAL_Delay(200);
     }
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

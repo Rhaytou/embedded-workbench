@@ -36,19 +36,20 @@ void setup()
     // Wait a brief moment to allow the serial monitor to connect
     vTaskDelay(pdMS_TO_TICKS(500));
 
-    // Print setup messages
-    ESP_LOGI(TAG, "");
-    ESP_LOGI(TAG, "=== Variable Debugging Example ===");
+    // Print setup messages directly to UART
+    printf("\n");
+    printf("=== Variable Debugging Example ===\n");
 
     // Debugging variable initialization
-    ESP_LOGI(TAG, "Counter initialized to: %d", counter);
+    printf("Counter initialized to: %d\n", counter);
 
     // Track program flow through setup
-    ESP_LOGI(TAG, "Step 1: Starting configuration...");
+    printf("Step 1: Starting configuration...\n");
     vTaskDelay(pdMS_TO_TICKS(500));
 
-    ESP_LOGI(TAG, "Step 2: Configuration complete");
-    ESP_LOGI(TAG, "Setup complete - entering main loop");
+    printf("Step 2: Configuration complete\n");
+    printf("Setup complete - entering main loop\n");
+    fflush(stdout); // make sure all prints appear immediately
 }
 
 // Equivalent to Arduino's loop()
@@ -77,19 +78,22 @@ void loop()
     vTaskDelay(pdMS_TO_TICKS(2000));
 }
 
-// ESP-IDF entry point
-extern "C" void app_main(void)
+// FreeRTOS task to run setup and loop
+void main_task(void* arg)
 {
     setup();
-    while (true)
+    while(true)
     {
         loop();
     }
 }
 
-
-
-
+// ESP-IDF entry point
+extern "C" void app_main()
+{
+    // Create a FreeRTOS task to run your main code
+    xTaskCreate(main_task, "main_task", 4096, NULL, 5, NULL);
+}
 
 
 

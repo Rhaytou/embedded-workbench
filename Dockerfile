@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     python3 python3-pip python3-venv git curl udev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PlatformIO Core
+# PlatformIO
 RUN pip install --break-system-packages -U platformio
 
 # Manual udev rules for USB device access

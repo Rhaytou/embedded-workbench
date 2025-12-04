@@ -1,7 +1,10 @@
 # Embedded Workbench
 
 **Embedded Workbench** is an embedded programming and learning environment built with Docker and other tools. It allows users to work from their host system while maintaining a completely isolated and cross-platform environment.
-The repository also includes a tutorials section, where each supported board-starting with Arduino, ESP32, and others—has its own dedicated guide.
+The repository includes two main folders:
+
+1. **workspace/** — where the development environment for each device, microcontroller, or board is implemented.
+2. **tutorials/** — where the tutorials for each board are located, along with a `README.md` file that contains a theoretical course on hardware engineering.
 
 ---
 
@@ -9,11 +12,12 @@ The repository also includes a tutorials section, where each supported board-sta
 
 ```
 embedded-workbench/
+├── README.md
+├── LICENSE
+├── .gitignore
 ├── Makefile
 ├── docker-compose.yaml
 ├── Dockerfile
-├── README.md
-├── LICENSE
 └── workspace/
 │   ├── arduino/
 │   │   ├── src/
@@ -24,8 +28,8 @@ embedded-workbench/
 │       │   └── main.c
 │       └── platformio.ini
 └── tutorials/
-    ├── 1_arduino/
-    └── 2_esp32/
+    ├── README.md
+    └── 1_arduino/
 ```
 
 ---
@@ -62,6 +66,8 @@ Each folder is organized by board. Simply copy and paste the code into your boar
 
 **Note:** Do not copy the entire file—only the content of the tutorial into the corresponding **main.c** file.
 **Note:** The tutorials will be the same for all boards at first. For example, if I have a course named 'debug', each board will have its own 'debug' course.
+
+The `README.md` file in the **tutorials** folder is simply a theoretical course on hardware engineering.
 
 ---
 
@@ -112,30 +118,32 @@ The workspace and tutorials are stored on your host machine, so you won’t lose
 
 ### Workflow
 
+#### PlatformIo
 **Build firmware**
 
 ```
-make build BOARD=arduino
+make build_pio BOARD=arduino
 ```
 
 **Upload firmware**
 
 ```
-make upload BOARD=arduino
+make upload_pio BOARD=arduino
 ```
 
 **Open serial monitor**
 
 ```
-make monitor BOARD=arduino
+make monitor_pio BOARD=arduino
 ```
 
 **Clean PlatformIO build files for the selected board**
 
 ```
-make clean
+make clean_pio
 ```
 
+### Stop the tool
 **Stop and remove all Docker containers and volumes defined in docker-compose**
 
 ```
@@ -159,7 +167,8 @@ make docker_clean_all
 
 ### Tutorials
 
-* Arduino and ESP32 full courses.
+* `./tutorials/README.md` content.
+* Arduino full courses.
 
 ---
 

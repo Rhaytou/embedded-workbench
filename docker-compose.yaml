@@ -1,5 +1,4 @@
 services:
-  # Define the PlatformIO development container
   platformio-dev:
     build: .  # Build the image using the Dockerfile in the current directory
     container_name: platformio-dev  # Set a fixed container name for easier reference

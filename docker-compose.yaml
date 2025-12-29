@@ -1,59 +1,288 @@
 services:
-  platformio-dev:
-    build: .  # Build the image using the Dockerfile in the current directory
-    container_name: platformio-dev  # Set a fixed container name for easier reference
-    privileged: true  # Allow access to hardware devices such as serial ports
+  # Hardware analysis
+  ##gpio-uart-i2c-spi-logic-analyzer_service:
+
+  usb-uart-jtag-swd-monitor_service:
+    container_name: usb-uart-jtag-swd-monitor_container
+    build:
+      context: ./dockerfile/hardware_analysis/usb-uart-jtag-swd-monitor
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    ports:
+      - "2222:22" # Ssh server # host_port:container_port
     devices:
-      - "/dev/ttyACM0:/dev/ttyACM0" # Common device path for Arduino, RP2040, etc.
-      - "/dev/ttyUSB0:/dev/ttyUSB0" # Common device path for ESP32, STM32, etc.
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
     volumes:
-      - ./workspace:/workspace  # Mount local workspace directory into the container
-    working_dir: /workspace  # Set the default working directory inside the container
-    environment:
-      - PLATFORMIO_CORE_DIR=/root/.platformio  # Define PlatformIO core directory location
-    stdin_open: true  # Keep STDIN open for interactive sessions
-    tty: true  # Allocate a pseudo-TTY for interactive command-line use
+      #- ./workspace:/workspace 
+      - ./workspace/hardware_analysis/usb-uart-jtag-swd-monitor:/workspace
+      #- usb-uart-jtag-swd-monitor_data:/workspace 
+      #- /lib/modules:/lib/modules:ro # Access to kernel modules
+      #- /proc:/proc # Kernel process & system info
+      #- /sys:/sys # Kernel hardware info, GPIO, USB descriptors, Power / bus info
+      - /run/udev:/run/udev:ro # Allows the container to see USB hot-plug events
+      #- /var/run/docker.sock:/var/run/docker.sock # Control docker from the containner. Inside the container you can run: docker ps, docker run ..., docker compose up, docker build
+      #- /tmp/.X11-unix:/tmp/.X11-unix # GUI access (on the host: xhost +local:docker)
+    environment: # Time sync (important for logs & debugging)
+      - TZ=Africa/Casablanca
+    #  - DISPLAY=${DISPLAY} # Gui access
+    #  - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    #  - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+    network_mode: host # Networking (for OpenOCD, GDB, Ethernet debugging, mDNS, etc.)
+    #networks:
+    #  - embedded_network
+    #networks:
+    #  embedded_macvlan_net:
+    #    ipv4_address: 192.168.1.100  # optional, assign static IP
+    #cap_add: # Linux capabilities (fine-grained control)
+    #  - SYS_ADMIN
+    #  - SYS_RAWIO
+    #  - NET_ADMIN
+    #  - NET_RAW
+    #  - SYS_PTRACE
+    privileged: true # Required for low-level hardware access
+    tty: true # Interactive usage
+    stdin_open: true # Interactive usage
+    restart: unless-stopped # Restart policy
+
+  ##software-defined-radio-monitor_service: # rtl_sdr — captures raw IQ samples to a file
+
+  network-monitor_service:
+    container_name: network-monitor_container
+    build:
+      context: ./dockerfile/hardware_analysis/network-monitor
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    ports:
+      - "2222:22" # Ssh server # host_port:container_port
+    devices:
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      #- ./workspace:/workspace 
+      - ./workspace/hardware_analysis/network-monitor:/workspace
+      #- network-monitor_data:/workspace 
+      #- /lib/modules:/lib/modules:ro # Access to kernel modules
+      #- /proc:/proc # Kernel process & system info
+      #- /sys:/sys # Kernel hardware info, GPIO, USB descriptors, Power / bus info
+      - /run/udev:/run/udev:ro # Allows the container to see USB hot-plug events
+      #- /var/run/docker.sock:/var/run/docker.sock # Control docker from the containner. Inside the container you can run: docker ps, docker run ..., docker compose up, docker build
+      #- /tmp/.X11-unix:/tmp/.X11-unix # GUI access (on the host: xhost +local:docker)
+    environment: # Time sync (important for logs & debugging)
+      - TZ=Africa/Casablanca
+    #  - DISPLAY=${DISPLAY} # Gui access
+    #  - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    #  - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+    network_mode: host # Networking (for OpenOCD, GDB, Ethernet debugging, mDNS, etc.)
+    #networks:
+    #  - embedded_network
+    #networks:
+    #  embedded_macvlan_net:
+    #    ipv4_address: 192.168.1.100  # optional, assign static IP
+    #cap_add: # Linux capabilities (fine-grained control)
+    #  - SYS_ADMIN
+    #  - SYS_RAWIO
+    #  - NET_ADMIN
+    #  - NET_RAW
+    #  - SYS_PTRACE
+    privileged: true # Required for low-level hardware access
+    tty: true # Interactive usage
+    stdin_open: true # Interactive usage
+    restart: unless-stopped # Restart policy
+
+  # Hardeware programming
+  platformio_service:
+    container_name: platformio_container
+    build:
+      context: ./dockerfile/hardware_programming/platformio
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    ports:
+      - "2222:22" # Ssh server # host_port:container_port
+    devices:
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      #- ./workspace:/workspace 
+      - ./workspace/hardware_programming/platformio:/workspace
+      #- platformio_data:/workspace 
+      #- /lib/modules:/lib/modules:ro # Access to kernel modules
+      #- /proc:/proc # Kernel process & system info
+      #- /sys:/sys # Kernel hardware info, GPIO, USB descriptors, Power / bus info
+      - /run/udev:/run/udev:ro # Allows the container to see USB hot-plug events
+      #- /var/run/docker.sock:/var/run/docker.sock # Control docker from the containner. Inside the container you can run: docker ps, docker run ..., docker compose up, docker build
+      #- /tmp/.X11-unix:/tmp/.X11-unix # GUI access (on the host: xhost +local:docker)
+    environment: # Time sync (important for logs & debugging)
+      - TZ=Africa/Casablanca
+    #  - DISPLAY=${DISPLAY} # Gui access
+    #  - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    #  - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - PLATFORMIO_CORE_DIR=/root/.platformio # Define PlatformIO core directory location
+    network_mode: host # Networking (for OpenOCD, GDB, Ethernet debugging, mDNS, etc.)
+    #networks:
+    #  - embedded_network
+    #networks:
+    #  embedded_macvlan_net:
+    #    ipv4_address: 192.168.1.100  # optional, assign static IP
+    #cap_add: # Linux capabilities (fine-grained control)
+    #  - SYS_ADMIN
+    #  - SYS_RAWIO
+    #  - NET_ADMIN
+    #  - NET_RAW
+    #  - SYS_PTRACE
+    privileged: true # Required for low-level hardware access
+    tty: true # Interactive usage
+    stdin_open: true # Interactive usage
+    restart: unless-stopped # Restart policy
+
+  pic_service:
+    container_name: pic_container
+    build:
+      context: ./dockerfile/hardware_programming/pic
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    ports:
+      - "2222:22" # Ssh server # host_port:container_port
+    devices:
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      #- ./workspace:/workspace 
+      - ./workspace/hardware_programming/pic:/workspace
+      #- pic_data:/workspace 
+      #- /lib/modules:/lib/modules:ro # Access to kernel modules
+      #- /proc:/proc # Kernel process & system info
+      #- /sys:/sys # Kernel hardware info, GPIO, USB descriptors, Power / bus info
+      - /run/udev:/run/udev:ro # Allows the container to see USB hot-plug events
+      #- /var/run/docker.sock:/var/run/docker.sock # Control docker from the containner. Inside the container you can run: docker ps, docker run ..., docker compose up, docker build
+      #- /tmp/.X11-unix:/tmp/.X11-unix # GUI access (on the host: xhost +local:docker)
+    environment: # Time sync (important for logs & debugging)
+      - TZ=Africa/Casablanca
+    #  - DISPLAY=${DISPLAY} # Gui access
+    #  - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    #  - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+    network_mode: host # Networking (for OpenOCD, GDB, Ethernet debugging, mDNS, etc.)
+    #networks:
+    #  - embedded_network
+    #networks:
+    #  embedded_macvlan_net:
+    #    ipv4_address: 192.168.1.100  # optional, assign static IP
+    #cap_add: # Linux capabilities (fine-grained control)
+    #  - SYS_ADMIN
+    #  - SYS_RAWIO
+    #  - NET_ADMIN
+    #  - NET_RAW
+    #  - SYS_PTRACE
+    privileged: true # Required for low-level hardware access
+    tty: true # Interactive usage
+    stdin_open: true # Interactive usage
+    restart: unless-stopped # Restart policy
+
+  ##raspberrypi_service:
+
+  ##spartan_6:
+
+  # Hardware access
+  ##linux_serivce:
+
+  android_service:
+    container_name: android_container
+    build:
+      context: ./dockerfile/hardware_access/android
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    ports:
+      #- "2222:22" # Ssh server # host_port:container_port
+      - "5555:5555"   # ADB over TCP/IP
+    devices:
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      #- ./workspace:/workspace 
+      - ./workspace/hardware_access/android:/workspace
+      #- android_data:/opt/android_data
+      #- /lib/modules:/lib/modules:ro # Access to kernel modules
+      #- /proc:/proc # Kernel process & system info
+      #- /sys:/sys # Kernel hardware info, GPIO, USB descriptors, Power / bus info
+      - /run/udev:/run/udev:ro # Allows the container to see USB hot-plug events
+      #- /var/run/docker.sock:/var/run/docker.sock # Control docker from the containner. Inside the container you can run: docker ps, docker run ..., docker compose up, docker build
+      #- /tmp/.X11-unix:/tmp/.X11-unix # GUI access (on the host: xhost +local:docker)
+    environment: # Time sync (important for logs & debugging)
+      - TZ=Africa/Casablanca
+    #  - DISPLAY=${DISPLAY} # Gui access
+    #  - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+    #  - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - ANDROID_HOME=/opt/android-sdk
+      - ANDROID_SDK_ROOT=/opt/android-sdk
+    network_mode: host # Networking (for OpenOCD, GDB, Ethernet debugging, mDNS, etc.)
+    #networks:
+    #  - embedded_network
+    #networks:
+    #  embedded_macvlan_net:
+    #    ipv4_address: 192.168.1.100  # optional, assign static IP
+    #cap_add: # Linux capabilities (fine-grained control)
+    #  - SYS_ADMIN
+    #  - SYS_RAWIO
+    #  - NET_ADMIN
+    #  - NET_RAW
+    #  - SYS_PTRACE
+    privileged: true # Required for low-level hardware access
+    tty: true # Interactive usage
+    stdin_open: true # Interactive usage
+    restart: unless-stopped # Restart policy
+
+  ##windows_service
+
+  ##macos_serivce:
+
+  ##ios_service:
+
+
+volumes:
+  workspace_data:
+  usb-uart-jtag-swd-monitor_data:  
+  network-monitor_data: 
+  platformio_data: 
+  pic_data:
+  android_data:
+  
+networks:
+  embedded_network:
+    driver: bridge
+#networks:
+#  embedded_macvlan_net:
+#    driver: macvlan
+#    driver_opts:
+#      parent: wlp1s0 # replace with your host interface
+#    ipam:
+#      config:
+#        - subnet: 192.168.1.0/24 # your LAN subnet
+#          gateway: 192.168.1.1 # your router IP
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#services:
-#  embedded-dev:
-#    build: .
-#
-#    container_name: embedded-dev
-#
-#    tty: true
-#
-#    stdin_open: true
-#
-#    volumes:
-#      - ./workspace:/workspace
-#
-#    privileged: true
-#
-#    devices:
-#      #- "/dev:/dev"
-#      - "/dev/ttyUSB0:/dev/ttyUSB0" # common Arduino/ESP32
-#      #- "/dev/ttyUSB1:/dev/ttyUSB1" # optional if multiple boards
-#      #- "/dev/ttyACM0:/dev/ttyACM0" # STM32
-#
-#    command: >
-#      bash -c "chmod -R 777 /workspace && exec bash"
 
 
 

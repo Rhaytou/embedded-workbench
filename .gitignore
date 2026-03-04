@@ -1,0 +1,63 @@
+# =============================================================================
+# Embedded Workbench — .gitignore
+# =============================================================================
+
+# --- Secrets (NEVER commit these) ---
+.env
+.env.*
+*.secret
+wpa_supplicant.conf
+
+# --- PlatformIO ---
+.pio/
+**/.pio/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+envName/
+
+# --- Compiled / Build ---
+*.o
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+build/
+dist/
+out/
+obj/
+
+# --- Android ---
+*.apk
+*.class
+workspace/hardware_programming/os-based/android/myapp/out/
+workspace/hardware_programming/os-based/android/myapp/out_classes/
+workspace/hardware_programming/os-based/android/myapp/out_dex/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Editor ---
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# --- Logs / Temp ---
+*.log
+*.tmp
+*.bak
+*.old
+
+# --- Utils ---
+embedded-workbench.txt
+_project_template
+
+
+

@@ -1,0 +1,44 @@
+services:
+  # Hardware programming
+  ## firmware-based
+  hpfb_service:
+    container_name: hpfb_container
+    build:
+      context: ./dockerfile/hardware_programming/firmware-based
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    devices:
+      - /dev:/dev
+      #- "/dev/ttyACM0:/dev/ttyACM0"
+      #- "/dev/bus:/dev/bus"
+      #- "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      - ./workspace/hardware_programming/firmware-based:/workspace
+      - /run/udev:/run/udev:ro
+    environment:
+      - TZ=Africa/Casablanca
+      - PLATFORMIO_CORE_DIR=/root/.platformio
+    network_mode: host
+    privileged: true
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
+  ## os-based
+
+  # Hardware communication
+  ## protocol
+
+  ## rf-wireless
+
+  # Hardware environment
+  ## Linux
+  ## Windows
+  ## macOS
+
+
+
+
+
